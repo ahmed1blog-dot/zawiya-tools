@@ -1,0 +1,12 @@
+{
+  "name": "zawiya-tools-windows",
+  "private": true,
+  "version": "0.6.0",
+  "license": "GPL-3.0-only",
+  "scripts": {
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Main window: app events and the app's own commands only.",
+  "windows": ["main"],
+  "permissions": [
+    "core:event:allow-listen",
+    "core:event:allow-unlisten",
+    "allow-app-info",
+    "allow-inspect",
+    "allow-pick-files",
+    "allow-pick-folder",
+    "allow-run-job",
+    "allow-cancel-job",
+    "allow-reveal",
+    "allow-open-link",
+    "allow-get-settings",
+    "allow-save-settings",
+    "allow-get-banner",
+    "allow-dismiss-banner",
+    "allow-check-for-updates",
+    "allow-restart-to-update",
+    "allow-wheel-status"
+  ]
+}

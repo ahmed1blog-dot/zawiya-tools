@@ -1,0 +1,63 @@
+[package]
+name = "zawiya-tools"
+version = "0.6.0"
+description = "Zawiya Tools - local file conversion utility"
+authors = ["Ahmed Marwan"]
+license = "GPL-3.0-only"
+repository = "https://github.com/ahmed1blog-dot/zawiya-tools"
+edition = "2021"
+rust-version = "1.80"
+
+[lib]
+name = "zawiya_tools_lib"
+crate-type = ["rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-opener = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-updater = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["time"] }
+regex = "1"
+uuid = { version = "1", features = ["v4"] }
+dunce = "1"
+url = "2"
+base64 = "0.22"
+lopdf = { version = "0.45", default-features = false }
+zip = { version = "9", default-features = false, features = ["deflate"] }
+pdfium-render = { version = "0.9", default-features = false, features = ["thread_safe", "pdfium_latest"] }
+reqwest = { version = "0.13", default-features = false, features = ["rustls-no-provider"] }
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12"] }
+tauri-plugin-global-shortcut = "2"
+tauri-plugin-single-instance = "2"
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.62", features = [
+    "Foundation",
+    "Foundation_Collections",
+    "Globalization",
+    "Graphics_Imaging",
+    "Media_Ocr",
+    "Storage",
+    "Storage_Streams",
+    "Win32_Foundation",
+    "Win32_System_Com",
+    "Win32_System_Ole",
+    "Win32_System_Registry",
+    "Win32_System_Variant",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_Shell",
+    "Win32_UI_WindowsAndMessaging",
+] }
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true
+panic = "abort"

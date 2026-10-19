@@ -1,0 +1,8 @@
+.DS_Store
+mac/.build-local/
+mac/.build/
+mac/dist/
+mac/vendor/bin/
+mac/vendor/dl/
+*.zip
+release/

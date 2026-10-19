@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "enabled": true,
+  "id": "follow-qqad7-2026-10",
+  "title_ar": "أدوات جديدة كل أسبوع",
+  "title_en": "New tools every week",
+  "body_ar": "تابع أحمد مروان على إنستجرام لأحدث الأدوات والتحديثات.",
+  "body_en": "Follow Ahmed Marwan on Instagram for new tools and updates.",
+  "cta_ar": "تابعني على إنستجرام",
+  "cta_en": "Follow @qqad7",
+  "url": "https://instagram.com/qqad7",
+  "image": "",
+  "expires": "2027-12-31",
+  "platforms": ["mac", "windows"]
+}

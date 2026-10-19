@@ -1,0 +1,100 @@
+name: Windows release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: windows-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: windows/package-lock.json
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: windows/src-tauri
+
+      - name: Bundle FFmpeg 9.0 release branch (BtbN GPL build)
+        run: |
+          $bin = "windows/src-tauri/resources/bin"
+          $tmp = Join-Path $env:RUNNER_TEMP "ffmpeg"
+          New-Item -ItemType Directory -Force $bin, $tmp | Out-Null
+          Invoke-WebRequest -Uri "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-n9.0-latest-win64-gpl-9.0.zip" -OutFile "$tmp/ffmpeg.zip"
+          Expand-Archive "$tmp/ffmpeg.zip" -DestinationPath $tmp
+          $exe = Get-ChildItem $tmp -Recurse -Filter ffmpeg.exe | Select-Object -First 1
+          $license = Get-ChildItem $tmp -Recurse -Filter LICENSE.txt | Select-Object -First 1
+          Copy-Item $exe.FullName "$bin/ffmpeg.exe"
+          Copy-Item $license.FullName "$bin/FFMPEG-LICENSE.txt"
+          & "$bin/ffmpeg.exe" -hide_banner -version | Select-Object -First 1
+
+      - name: Bundle PDFium chromium/8086 (bblanchon/pdfium-binaries)
+        run: |
+          $bin = "windows/src-tauri/resources/bin"
+          $tmp = Join-Path $env:RUNNER_TEMP "pdfium"
+          New-Item -ItemType Directory -Force $tmp | Out-Null
+          Invoke-WebRequest -Uri "https://github.com/bblanchon/pdfium-binaries/releases/download/chromium%2F8086/pdfium-win-x64.tgz" -OutFile "$tmp/pdfium.tgz"
+          tar -xzf "$tmp/pdfium.tgz" -C $tmp
+          Copy-Item "$tmp/bin/pdfium.dll" "$bin/pdfium.dll"
+          if (Test-Path "$tmp/LICENSE") { Copy-Item "$tmp/LICENSE" "$bin/PDFIUM-LICENSE.txt" }
+          Get-ChildItem $bin
+
+      - name: Install frontend tooling
+        working-directory: windows
+        run: npm ci
+
+      - name: Test
+        working-directory: windows/src-tauri
+        run: cargo test --locked
+
+      - name: Build, sign and publish
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          projectPath: windows
+          tagName: ${{ github.ref_type == 'tag' && github.ref_name || 'v__VERSION__' }}
+          releaseName: Zawiya Tools ${{ github.ref_type == 'tag' && github.ref_name || 'v__VERSION__' }}
+          releaseBody: See the release notes for Zawiya Tools.
+          releaseDraft: false
+          prerelease: false
+          includeUpdaterJson: true
+          updaterJsonPreferNsis: true
+          args: --bundles nsis
+
+      - name: Verify the Explorer right-click verb (silent install, check, uninstall)
+        run: |
+          $setup = Get-ChildItem windows/src-tauri/target/release/bundle/nsis -Filter *-setup.exe | Select-Object -First 1
+          Start-Process $setup.FullName -ArgumentList '/S' -Wait
+          $key = 'HKCU:\Software\Classes\*\shell\ZawiyaTools'
+          $verb = (Get-ItemProperty -LiteralPath $key).MUIVerb
+          $command = (Get-ItemProperty -LiteralPath "$key\command").'(default)'
+          "verb: $verb"; "command: $command"
+          if ($verb -ne 'أداة زاوية…') { throw "Unexpected verb label: $verb" }
+          if (-not $command.EndsWith('--wheel "%1"')) { throw "Unexpected command: $command" }
+          if (-not (Test-Path -LiteralPath 'HKCU:\Software\Classes\Directory\shell\ZawiyaTools\command')) { throw "Folder verb missing" }
+          $exe = ($command -split '"')[1]
+          if (-not (Test-Path -LiteralPath $exe)) { throw "Verb points to a missing exe: $exe" }
+          $dir = Split-Path $exe
+          Start-Process "$dir\uninstall.exe" -ArgumentList '/S', "_?=$dir" -Wait
+          if (Test-Path -LiteralPath $key) { throw "Verb left behind after uninstall" }

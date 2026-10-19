@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zawiya Tools</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="shared.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <svg class="mark" viewBox="0 0 34 34" aria-hidden="true"><path d="M29 27 L7 27 L22 7"/><path d="M17 27 A10 10 0 0 0 13 19"/><circle cx="7" cy="27" r="2.8"/></svg>
+        <div><div class="brand-name" dir="ltr">Zawiya Tools</div><div class="muted small">أداة زاوية</div></div>
+      </div>
+      <nav id="nav" aria-label="Sections"></nav>
+      <div class="spacer"></div>
+      <div id="banner" hidden></div>
+      <div class="credits">
+        <div class="muted small" id="local-note"></div>
+        <div class="small">© 2026 أحمد مروان · Ahmed Marwan</div>
+        <div class="links small">
+          <a href="#" data-link="https://ahmedqa.com" dir="ltr">ahmedqa.com</a>
+          <a href="#" data-link="https://instagram.com/qqad7" dir="ltr">@qqad7</a>
+        </div>
+        <div class="links small">
+          <a href="#" data-link="https://github.com/ahmed1blog-dot/zawiya-tools" id="oss-link"></a>
+          <span class="mono muted" id="version" dir="ltr"></span>
+        </div>
+      </div>
+    </aside>
+    <main class="main">
+      <header class="header">
+        <div>
+          <h1 id="title"></h1>
+          <div class="muted small" id="subtitle"></div>
+        </div>
+        <div class="header-actions">
+          <button class="chip" id="search-btn" type="button"><span class="ico" data-icon="search"></span><span id="search-label"></span><kbd>Ctrl K</kbd></button>
+          <button class="round" id="lang-btn" type="button"></button>
+          <button class="round" id="theme-btn" type="button"><span class="ico" data-icon="theme"></span></button>
+        </div>
+      </header>
+      <section class="content" id="content" tabindex="-1"></section>
+      <div class="update-bar" id="update-bar" hidden role="status"></div>
+      <footer class="footer" id="footer"></footer>
+    </main>
+  </div>
+  <dialog id="search">
+    <div class="search-head"><span class="ico" data-icon="search"></span><input id="search-input" type="search" autocomplete="off" spellcheck="false"><button type="button" class="link muted" id="search-close"></button></div>
+    <div id="search-results" class="search-results" role="listbox"></div>
+    <div class="search-foot muted small" id="search-foot"></div>
+  </dialog>
+  <div id="live" class="sr-only" aria-live="polite"></div>
+</body>
+</html>

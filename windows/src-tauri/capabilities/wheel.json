@@ -1,0 +1,16 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "wheel",
+  "description": "Quick wheel: read its menu, switch mode, run a choice, close.",
+  "windows": [
+    "wheel"
+  ],
+  "permissions": [
+    "core:event:allow-listen",
+    "core:event:allow-unlisten",
+    "allow-wheel-view",
+    "allow-wheel-mode",
+    "allow-wheel-run",
+    "allow-wheel-close"
+  ]
+}

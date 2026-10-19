@@ -1,0 +1,14 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "toast",
+  "description": "Result toast: read the quick job state, reveal, cancel or close.",
+  "windows": [
+    "toast"
+  ],
+  "permissions": [
+    "core:event:allow-listen",
+    "core:event:allow-unlisten",
+    "allow-toast-state",
+    "allow-toast-action"
+  ]
+}
