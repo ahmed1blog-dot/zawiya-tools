@@ -10,6 +10,8 @@
 
 تطوير **[أحمد مروان](https://ahmedqa.com)** · إنستجرام **[@qqad7](https://instagram.com/qqad7)** · مفتوح المصدر برخصة **GPL-3.0**
 
+[English](README.en.md) · العربية
+
 <img src="docs/screenshots/main-dark.png" width="760" alt="Zawiya Tools">
 <br><img src="docs/screenshots/wheel-convert.png" width="260" alt="عجلة التحويل"> <img src="docs/screenshots/wheel-tools.png" width="260" alt="عجلة الأدوات">
 
